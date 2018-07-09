@@ -17,7 +17,8 @@ while True:
                 aircraft['unixtime'] = data['now']
                 aircraft['node_number'] = sys.argv[3]
                 if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                    adsb.append(aircraft)
+                    if aircraft['validposition'] == 1:
+                        adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = adsb, headers=headers)
             print("status : "+str(res))
