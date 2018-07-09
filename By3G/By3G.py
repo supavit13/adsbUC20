@@ -8,14 +8,18 @@ headers = {'Content-Type': 'application/json', 'Accept':'application/json'}
 while True:
     data = {}
     pre_time = time()
-    print(pre_time)
+    # print(pre_time)
+    # r = requests.get(url="http://192.167.10.18:8080/data.json")
+    # print(r.json())
     try:
-        with urllib.request.urlopen("http://192.167.10.18:8080/data.json") as url:
+        
+        with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             adsb = []
             data = json.loads(url.read().decode())
             print("read json aircraft..")
+            print(data)
             for aircraft in data:
-                aircraft['unixtime'] = int(time())
+                aircraft['unixtime'] = int(pre_time)
                 aircraft['node_number'] = sys.argv[3]
                 if all(x in aircraft for x in ("lat","lon","flight","altitude")):
                     if aircraft['validposition'] == 1:
