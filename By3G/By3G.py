@@ -9,7 +9,7 @@ while True:
     data = {}
     pre_time = time()
     try:
-        with urllib.request.urlopen("http://127.0.0.1:8080/data/aircraft.json") as url:
+        with urllib.request.urlopen("http://127.0.0.1:8080/aircraft.json") as url:
             adsb = []
             data = json.loads(url.read().decode())
             print("read json aircraft..")
