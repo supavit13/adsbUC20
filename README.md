@@ -2,9 +2,9 @@
 
 ## requirement
 - python
-- dump1090 K2DLS
+- dump1090 K2DLS https://www.k2dls.net/blog/tag/dump1090/
 - 3G Hat expansion for raspberry pi
-- raspberry pi
+- raspberry pi 
 - Sakis3G
 - umtskeeper
 ## installation
