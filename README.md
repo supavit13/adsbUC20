@@ -7,6 +7,7 @@
 - raspberry pi 
 - Sakis3G
 - umtskeeper
+- watchdog
 ## installation
 - connect RTL-SDR usb and 3G hat on RPi
 - install python , dump1090 , Sakis3G and umtskeeper
