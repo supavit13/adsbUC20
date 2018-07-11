@@ -4,6 +4,7 @@ import sys
 import requests
 from time import sleep, time
 API_ENDPOINT = "http://"+sys.argv[1]+":"+sys.argv[2]+"/putdata"
+API_KEY = sys.argv[4]+"@"+sys.argv[5];
 headers = {'Content-Type': 'application/json', 'Accept':'application/json'}
 while True:
     data = {}
@@ -25,7 +26,7 @@ while True:
                     if aircraft['validposition'] == 1:
                         adsb.append(aircraft)
             
-            res = requests.post(url = API_ENDPOINT, json = adsb, headers=headers)
+            res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
             print("status : "+str(res))
             print(str(aircraft['unixtime'])+" send "+str(time()))
         print("1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
