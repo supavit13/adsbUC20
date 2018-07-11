@@ -15,7 +15,7 @@
 - sudo crontab -e
 add command to run script
 
-  @reboot python3 file.py [IP] [PORT] [NODE_NUMBER] &
+  @reboot python3 file.py [IP] [PORT] [NODE_NUMBER] [API_KEY] [API_SECRET] &
   
 - sudo nano /etc/rc.local
 add command between fi and exit 0
