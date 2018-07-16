@@ -1,10 +1,8 @@
-import serial
-import urllib.request, json
-import sys
-import requests
-import socket
-import os
-from subprocess import call
+import urllib.request, json # for http request and json en/decoder
+import sys #for argument
+import requests # request response
+import os # files management
+from subprocess import call 
 from time import sleep, time
 API_ENDPOINT = "http://"+sys.argv[1]+":"+sys.argv[2]+"/putdata"
 API_KEY = sys.argv[4]+"@"+sys.argv[5];
@@ -37,7 +35,8 @@ def when_lost():
                         history = json.load(f) 
                         res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : history }, headers=headers)
                 else:
-                    return
+                    break
+            return
 
         for i in range(0,30):
             with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
