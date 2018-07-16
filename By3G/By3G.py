@@ -4,31 +4,51 @@ import requests # request response
 import os # files management
 from subprocess import call 
 from time import sleep, time
-API_ENDPOINT = "http://"+sys.argv[1]+":"+sys.argv[2]+"/putdata"
-API_KEY = sys.argv[4]+"@"+sys.argv[5];
-headers = {'Content-Type': 'application/json', 'Accept':'application/json'}
+from datetime import datetime
+API_ENDPOINT = "http://"+sys.argv[1]+":"+sys.argv[2]+"/putdata" # ip webserver
+API_KEY = sys.argv[4]+"@"+sys.argv[5]; # key and secret on webserver
+headers = {'Content-Type': 'application/json', 'Accept':'application/json'} #set header for http request
+sys.stdout = open('/home/pi/log.txt', 'w') # set file log
 
-def check_internet():
+        
+class Tee(object): # class about write log file
+    def __init__(self, *files):
+        self.files = files
+    def write(self, obj):
+        for f in self.files:
+            f.write(obj) # write file
+            f.flush() #show content file realtime
+            if os.path.isfile('/home/pi/log.txt') and os.path.getsize("/home/pi/log.txt") >= 50000000: # if file size more than 50 MB then delete file log and create again
+                os.remove("/home/pi/log.txt")
+                f = open('/home/pi/log.txt', 'w')
+
+            
+
+f = open('/home/pi/log.txt', 'w')
+backup = sys.stdout
+sys.stdout = Tee(sys.stdout, f)
+
+def check_internet(): # check internet connection
     url=API_ENDPOINT
     timeout=5
     try:
         _ = requests.get(url, timeout=timeout)
         return True
     except requests.ConnectionError:
-        print("internet or webserver lost connection")
+        print(str(datetime.now())+" internet or webserver lost connection")
         return False
     except requests.exceptions.ReadTimeout:
-        print("timeout")
+        print(str(datetime.now())+" timeout")
         return False
 
-def when_lost():
+def when_lost(): # backup to file history_0 - history_119
     filenumber = 0
     while True:
         data = {}
         pre_time = time()
         adsb = []
         if check_internet():
-            print("on")
+            print(str(datetime.now())+" on")
             for i in range(0,120):
                 if os.path.isfile('history_'+str(i)+'.json'):
                     with open('history_'+str(i)+'.json') as f:
@@ -42,7 +62,7 @@ def when_lost():
             with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                 data = json.loads(url.read().decode())
-                print("read json aircraft..")
+                print(str(datetime.now())+" read json aircraft..")
                 for aircraft in data:
                     aircraft['unixtime'] = int(time())
                     aircraft['node_number'] = sys.argv[3]
@@ -52,17 +72,18 @@ def when_lost():
             sleep(1)
         with open('history_'+str(filenumber)+'.json', 'w') as outfile:
             json.dump(adsb, outfile)
-            print("created "+str(filenumber))
+            print(str(datetime.now())+" created "+str(filenumber))
         filenumber = filenumber + 1
         if filenumber == 120:
             filenumber = 0
 while True:
     data = {}
     pre_time = time()
+    print(os.path.getsize("/home/pi/log.txt"))
     if check_internet():
-        print("on")
+        print(str(datetime.now())+" on")
     else:
-        print("off")
+        print(str(datetime.now())+" off")
         when_lost()
         
     try:
@@ -72,8 +93,9 @@ while True:
             adsb = []
             data = json.loads(url.read().decode())
 
-            print("read json aircraft..")
-            print(data)
+            print(str(datetime.now())+" read json aircraft..")
+            # print(str(datetime.now())+" data is")
+            # print(data)
             for aircraft in data:
                 aircraft['unixtime'] = int(pre_time)
                 aircraft['node_number'] = sys.argv[3]
@@ -82,16 +104,16 @@ while True:
                         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
-            print("status : "+str(res))
-            print(str(aircraft['unixtime'])+" send "+str(time()))
-        print("1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
+            print(str(datetime.now())+" status : "+str(res))
+            print(str(datetime.now())+" "+str(aircraft['unixtime'])+" send "+str(time()))
+        print(str(datetime.now())+" 1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
     except urllib.error.URLError:
-        print("adsb lost, try to connect") # adsb lost
+        print(str(datetime.now())+" adsb lost, try to connect") # adsb lost
     except requests.exceptions.ConnectionError:
-        print("can't connect webserver") # internet lost
+        print(str(datetime.now())+" can't connect webserver") # internet lost
         
     except:
-        print("an error occured")
+        print(str(datetime.now())+" an error occured")
     else:
-        print("running without error")
+        print(str(datetime.now())+" running without error")
     sleep(1)
