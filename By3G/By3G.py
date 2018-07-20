@@ -61,8 +61,8 @@ def when_lost(): # backup to file history_0 - history_119
             return
 
         for i in range(0,30):
-            with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             checklog()
+            with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                 data = json.loads(url.read().decode())
                 print(str(datetime.now())+" read json aircraft..")
