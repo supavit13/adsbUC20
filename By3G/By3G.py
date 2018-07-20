@@ -18,11 +18,6 @@ class Tee(object): # class about write log file
         for f in self.files:
             f.write(obj) # write file
             f.flush() #show content file realtime
-            if os.path.isfile('/home/pi/log.txt') and os.path.getsize("/home/pi/log.txt") >= 50000000: # if file size more than 50 MB then delete file log and create again
-                os.remove("/home/pi/log.txt")
-                f = open('/home/pi/log.txt', 'w')
-
-            
 
 f = open('/home/pi/log.txt', 'w')
 backup = sys.stdout
@@ -41,6 +36,13 @@ def check_internet(): # check internet connection
         print(str(datetime.now())+" timeout")
         return False
 
+def checklog():
+    if os.path.isfile('/home/pi/log.txt') and os.path.getsize("/home/pi/log.txt") >= 50000000: # if file size more than 50 MB then delete file log and create again
+        open("/home/pi/log.txt", "w").close()
+        sys.stdout = open('/home/pi/log.txt', 'w') 
+        f = open('/home/pi/log.txt', 'w')
+        backup = sys.stdout
+        sys.stdout = Tee(sys.stdout, f)
 def when_lost(): # backup to file history_0 - history_119
     filenumber = 0
     while True:
@@ -60,6 +62,7 @@ def when_lost(): # backup to file history_0 - history_119
 
         for i in range(0,30):
             with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
+            checklog()
             # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                 data = json.loads(url.read().decode())
                 print(str(datetime.now())+" read json aircraft..")
@@ -76,10 +79,12 @@ def when_lost(): # backup to file history_0 - history_119
         filenumber = filenumber + 1
         if filenumber == 120:
             filenumber = 0
+
 while True:
     data = {}
     pre_time = time()
     print(os.path.getsize("/home/pi/log.txt"))
+    checklog()
     if check_internet():
         print(str(datetime.now())+" on")
     else:
