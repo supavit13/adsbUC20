@@ -36,10 +36,10 @@ def check_internet(): # check internet connection
         _ = requests.get(url, timeout=timeout)
         return True
     except requests.ConnectionError:
-        logging.warning(str(datetime.now())+" internet or webserver lost connection")
+        logging.warning(" internet or webserver lost connection")
         return False
     except requests.exceptions.ReadTimeout:
-        logging.warning(str(datetime.now())+" timeout")
+        logging.warning(" timeout")
         return False
 
 def checklog():
@@ -59,7 +59,7 @@ def when_lost(): # backup to file history_0 - history_119
         pre_time = time()
         adsb = []
         if check_internet():
-            logging.info(str(datetime.now())+" on")
+            logging.info(" on")
             for i in range(0,120):
                 if os.path.isfile('history_'+str(i)+'.json'):
                     with open('history_'+str(i)+'.json') as f:
@@ -74,7 +74,7 @@ def when_lost(): # backup to file history_0 - history_119
             with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                 data = json.loads(url.read().decode())
-                logging.info(str(datetime.now())+" read json aircraft..")
+                logging.info(" read json aircraft..")
                 for aircraft in data:
                     aircraft['unixtime'] = int(time())
                     aircraft['node_number'] = sys.argv[3]
@@ -84,7 +84,7 @@ def when_lost(): # backup to file history_0 - history_119
             sleep(1)
         with open('history_'+str(filenumber)+'.json', 'w') as outfile:
             json.dump(adsb, outfile)
-            logging.info(str(datetime.now())+" created "+str(filenumber))
+            logging.info(" created "+str(filenumber))
         filenumber = filenumber + 1
         if filenumber == 120:
             filenumber = 0
@@ -93,12 +93,11 @@ while True:
     data = {}
     pre_time = time()
     logging.info(os.path.getsize("/home/pi/log.txt"))
-    logging.info("sss")
     checklog()
     if check_internet():
-        logging.info(str(datetime.now())+" on")
+        logging.info(" on")
     else:
-        logging.info(str(datetime.now())+" off")
+        logging.info(" off")
         when_lost()
         
     try:
@@ -108,8 +107,8 @@ while True:
             adsb = []
             data = json.loads(url.read().decode())
 
-            logging.info(str(datetime.now())+" read json aircraft..")
-            # print(str(datetime.now())+" data is")
+            logging.info(" read json aircraft..")
+            # print(" data is")
             # print(data)
             for aircraft in data:
                 aircraft['unixtime'] = int(pre_time)
@@ -119,16 +118,16 @@ while True:
                         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
-            logging.info(str(datetime.now())+" status : "+str(res))
-            logging.info(str(datetime.now())+" "+str(aircraft['unixtime'])+" send "+str(time()))
-        logging.info(str(datetime.now())+" 1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
+            logging.info(" status : "+str(res))
+            logging.info(" "+str(aircraft['unixtime'])+" send "+str(time()))
+        logging.info(" 1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
     except urllib.error.URLError:
-        logging.warning(str(datetime.now())+" adsb lost, try to connect") # adsb lost
+        logging.warning(" adsb lost, try to connect") # adsb lost
     except requests.exceptions.ConnectionError:
-        logging.warning(str(datetime.now())+" can't connect webserver") # internet lost
+        logging.warning(" can't connect webserver") # internet lost
         
     except:
-        logging.warning(str(datetime.now())+" an error occured")
+        logging.warning(" an error occured")
     else:
-        logging.warning(str(datetime.now())+" running without error")
+        logging.warning(" running without error")
     sleep(1)
