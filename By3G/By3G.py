@@ -64,32 +64,37 @@ def when_lost(): # backup to file history_0 - history_119
                 if os.path.isfile('history_'+str(i)+'.json'):
                     with open('history_'+str(i)+'.json') as f:
                         history = json.load(f) 
-                        res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : history }, headers=headers)
+                        try:
+                            res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : history }, headers=headers)
+                        except:
+                            logging.warning(" cannot post backup data to server")
                 else:
                     break
             o=os.popen('rm -f /home/pi/history_*').read()
             return
-
-        for i in range(0,5):
-            checklog()
-            with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
-            # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
-                data = json.loads(url.read().decode())
-                logging.info(" read json aircraft..")
-                for aircraft in data:
-                    aircraft['unixtime'] = int(time())
-                    aircraft['node_number'] = sys.argv[3]
-                    if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                        if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
-                        # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
-                            adsb.append(aircraft)
-            sleep(1)
-        with open('history_'+str(filenumber)+'.json', 'w') as outfile:
-            json.dump(adsb, outfile)
-            logging.info(" created "+str(filenumber))
-        filenumber = filenumber + 1
-        if filenumber == 120:
-            filenumber = 0
+        try:
+            for i in range(0,5):
+                checklog()
+                # with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
+                with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
+                    data = json.loads(url.read().decode())
+                    logging.info(" read json aircraft..")
+                    for aircraft in data:
+                        aircraft['unixtime'] = int(time())
+                        aircraft['node_number'] = sys.argv[3]
+                        if all(x in aircraft for x in ("lat","lon","flight","altitude")):
+                            # if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                            if aircraft['flight'] != "" and aircraft['flight'] != "????????":
+                                adsb.append(aircraft)
+                sleep(1)
+            with open('history_'+str(filenumber)+'.json', 'w') as outfile:
+                json.dump(adsb, outfile)
+                logging.info(" created "+str(filenumber))
+            filenumber = filenumber + 1
+            if filenumber == 120:
+                filenumber = 0
+        except:
+            logging.warning(" cannot get data from adsb or cannot save file history")
 
 while True:
     data = {}
@@ -104,8 +109,8 @@ while True:
         
     try:
         
-        with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
-        # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
+        # with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
+        with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
             adsb = []
             data = json.loads(url.read().decode())
 
@@ -116,8 +121,8 @@ while True:
                 aircraft['unixtime'] = int(pre_time)
                 aircraft['node_number'] = sys.argv[3]
                 if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                    if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
-                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
+                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                    if aircraft['flight'] != "" and aircraft['flight'] != "????????":
                         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
