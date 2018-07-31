@@ -67,6 +67,7 @@ def when_lost(): # backup to file history_0 - history_119
                         res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : history }, headers=headers)
                 else:
                     break
+            o=os.popen('rm -f /home/pi/history_*').read()
             return
 
         for i in range(0,5):
