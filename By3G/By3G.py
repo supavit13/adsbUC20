@@ -69,7 +69,7 @@ def when_lost(): # backup to file history_0 - history_119
                     break
             return
 
-        for i in range(0,30):
+        for i in range(0,5):
             checklog()
             with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
             # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
@@ -79,7 +79,8 @@ def when_lost(): # backup to file history_0 - history_119
                     aircraft['unixtime'] = int(time())
                     aircraft['node_number'] = sys.argv[3]
                     if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                        if  aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                        if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                        # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
                             adsb.append(aircraft)
             sleep(1)
         with open('history_'+str(filenumber)+'.json', 'w') as outfile:
@@ -92,7 +93,7 @@ def when_lost(): # backup to file history_0 - history_119
 while True:
     data = {}
     pre_time = time()
-    logging.info(os.path.getsize("/home/pi/log.txt"))
+    logging.info(os.path.getsize("/home/pi/myapp.log"))
     checklog()
     if check_internet():
         logging.info(" on")
@@ -115,6 +116,7 @@ while True:
                 aircraft['node_number'] = sys.argv[3]
                 if all(x in aircraft for x in ("lat","lon","flight","altitude")):
                     if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
                         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
