@@ -75,16 +75,16 @@ def when_lost(): # backup to file history_0 - history_119
         try:
             for i in range(0,5):
                 checklog()
-                # with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
-                with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
+                with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
+                # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                     data = json.loads(url.read().decode())
                     logging.info(" read json aircraft..")
                     for aircraft in data:
                         aircraft['unixtime'] = int(time())
                         aircraft['node_number'] = sys.argv[3]
                         if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                            # if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
-                            if aircraft['flight'] != "" and aircraft['flight'] != "????????":
+                            if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                            # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
                                 adsb.append(aircraft)
                 sleep(1)
             with open('history_'+str(filenumber)+'.json', 'w') as outfile:
@@ -109,8 +109,8 @@ while True:
         
     try:
         
-        # with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
-        with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
+        with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
+        # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
             adsb = []
             data = json.loads(url.read().decode())
 
@@ -121,8 +121,8 @@ while True:
                 aircraft['unixtime'] = int(pre_time)
                 aircraft['node_number'] = sys.argv[3]
                 if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
-                    if aircraft['flight'] != "" and aircraft['flight'] != "????????":
+                    if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
                         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
