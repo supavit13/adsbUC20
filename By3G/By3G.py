@@ -60,7 +60,7 @@ def when_lost(): # backup to file history_0 - history_119
         adsb = []
         if check_internet():
             logging.info(" on")
-            for i in range(0,120):
+            for i in range(0,60):
                 if os.path.isfile('history_'+str(i)+'.json'):
                     with open('history_'+str(i)+'.json') as f:
                         history = json.load(f) 
@@ -73,7 +73,7 @@ def when_lost(): # backup to file history_0 - history_119
             o=os.popen('rm -f /home/pi/history_*').read()
             return
         try:
-            for i in range(0,5):
+            for i in range(0,10):
                 checklog()
                 with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
                 # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
@@ -91,7 +91,7 @@ def when_lost(): # backup to file history_0 - history_119
                 json.dump(adsb, outfile)
                 logging.info(" created "+str(filenumber))
             filenumber = filenumber + 1
-            if filenumber == 120:
+            if filenumber == 60:
                 filenumber = 0
         except:
             logging.warning(" cannot get data from adsb or cannot save file history")
