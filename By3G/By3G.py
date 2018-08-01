@@ -70,7 +70,7 @@ def when_lost(): # backup to file history_0 - history_119
                             logging.warning(" cannot post backup data to server")
                 else:
                     break
-            o=os.popen('rm -f /home/pi/history_*').read()
+            o=os.popen('rm -f /home/pi/adsbUC20/history_*').read()
             return
         try:
             for i in range(0,10):
