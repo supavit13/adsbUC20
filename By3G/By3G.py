@@ -9,7 +9,7 @@ import logging
 API_ENDPOINT = "http://"+sys.argv[1]+":"+sys.argv[2]+"/putdata" # ip webserver
 API_KEY = sys.argv[4]+"@"+sys.argv[5]; # key and secret on webserver
 headers = {'Content-Type': 'application/json', 'Accept':'application/json'} #set header for http request
-
+countAdsbLost = 0
 if os.path.isfile('/home/pi/myapp.log'):
     logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(message)s',
@@ -71,6 +71,7 @@ def when_lost(): # backup to file history_0 - history_119
                 else:
                     break
             o=os.popen('rm -f /home/pi/adsbUC20/history_*').read()
+            countAdsbLost = 0
             return
         try:
             for i in range(0,10):
@@ -78,7 +79,7 @@ def when_lost(): # backup to file history_0 - history_119
                 with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
                 # with urllib.request.urlopen("http://164.115.43.87:8080/api") as url:
                     data = json.loads(url.read().decode())
-                    logging.info(" read json aircraft..")
+                    logging.info(" read json aircraft.. for write file")
                     for aircraft in data:
                         aircraft['unixtime'] = int(time())
                         aircraft['node_number'] = sys.argv[3]
@@ -95,6 +96,11 @@ def when_lost(): # backup to file history_0 - history_119
                 filenumber = 0
         except:
             logging.warning(" cannot get data from adsb or cannot save file history")
+            countAdsbLost = countAdsbLost + 1
+            if countAdsbLost == 60:
+                countAdsbLost = 0
+                o=os.popen('sudo systemctl restart dump1090.service').read()
+                logging.warning(" dump1090 service restarted for write file")
 
 while True:
     data = {}
@@ -105,6 +111,7 @@ while True:
         logging.info(" on")
     else:
         logging.info(" off")
+        countAdsbLost = 0
         when_lost()
         
     try:
@@ -131,11 +138,16 @@ while True:
         logging.info(" 1 jps(json per second) file in " + str(time()-pre_time) +" seconds")
     except urllib.error.URLError:
         logging.warning(" adsb lost, try to connect") # adsb lost
+        countAdsbLost = countAdsbLost + 1 
+        if countAdsbLost == 60:
+            countAdsbLost = 0
+            o=os.popen('sudo systemctl restart dump1090.service').read()
+            logging.warning(" dump1090 service restarted for send data")
     except requests.exceptions.ConnectionError:
         logging.warning(" can't connect webserver") # internet lost
         
     except:
         logging.warning(" an error occured")
     else:
-        logging.warning(" running without error")
+        logging.info(" running without error")
     sleep(1)
