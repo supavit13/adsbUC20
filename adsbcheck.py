@@ -8,7 +8,7 @@ from datetime import datetime
 import logging
 o = os.popen('curl 127.0.0.1:8080/data.json').read()
 fail = "Failed"
-print(type o.find(fail))
+type(o)
 if o.find(fail) == -1:
     print("running")
 else:
