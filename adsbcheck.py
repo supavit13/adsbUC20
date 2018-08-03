@@ -8,7 +8,7 @@ from datetime import datetime
 import logging
 try:
 
-    o = requests.get('127.0.0.1:8080/data.json')
+    o = requests.get('http://127.0.0.1:8080/data.json')
     print(o.json())
 except:
     print("failed")
