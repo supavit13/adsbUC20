@@ -12,3 +12,5 @@ print(o.find(fail))
 if o.find(fail) == -1:
     print(fail)
     os.popen('sudo systemctl restart dump1090.service')
+else:
+    print("running")
