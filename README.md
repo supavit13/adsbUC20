@@ -26,10 +26,13 @@ add command to run script
 0 0 * * * sudo reboot
 * * * * * python3 /home/pi/adsbUC20/adsbcheck.py
 ```
-  
-- sudo nano /etc/rc.local
+add command to run modem 3G
+```
+sudo nano /etc/rc.local
+```
 
 add command between fi and exit 0
+
 ```
 /home/pi/Download/modem/umtskeeper --sakisoperators "OTHER='CUSTOM_TTY' CUSTOM_TTY='/dev/ttyUSB3' APN='CUSTOM_APN' CUSTOM_APN='internet' APN_USER='0' APN_PASS='0'" --sakisswitches "--sudo --console" --devicename 'Quectel' --log --silent --monthstart 8 --nat 'no' --httpserver &>> /home/pi/Downloads/modem/err.log &
 ```
