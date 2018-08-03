@@ -18,10 +18,14 @@
 add command to run script
 
   @reboot python3 file.py [IP] [PORT] [NODE_NUMBER] [API_KEY] [API_SECRET] &
-  @reboot /usr/bin/weavedstart.sh
+
   @reboot python3 /home/pi/temperature.py &
+
   59 23 * * * rm -f /home/pi/adsbUC20/history_*
+
   0 0 * * * sudo reboot
+  
+  * * * * * python3 /home/pi/adsbUC20/adsbcheck.py
   
 - sudo nano /etc/rc.local
 add command between fi and exit 0
