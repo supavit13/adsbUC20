@@ -6,10 +6,7 @@ from subprocess import call
 from time import sleep, time
 from datetime import datetime
 import logging
-try:
-    with urllib.request.urlopen("http://127.0.0.1:8080/data.json") as url:
-        data = json.loads(url.read().decode())
-        print(data)
-except:
-    print("dump1090.service failed.")
-    os.popen('sudo systemctl restart dump1090.service')
+o = os.popen('curl 127.0.0.1:8080/data.json').read()
+print(o)
+#print("dump1090.service failed.")
+#os.popen('sudo systemctl restart dump1090.service')
