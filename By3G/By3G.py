@@ -100,11 +100,11 @@ while True:
     pre_time = time()
     logging.info(os.path.getsize("/home/pi/myapp.log"))
     checklog()
-    if check_internet():
-        logging.info(" on")
-    else:
-        logging.info(" off")
-        when_lost()
+    # if check_internet():
+    #     logging.info(" on")
+    # else:
+    #     logging.info(" off")
+    #     when_lost()
         
     try:
         
@@ -119,10 +119,11 @@ while True:
             for aircraft in data:
                 aircraft['unixtime'] = int(pre_time)
                 aircraft['node_number'] = sys.argv[3]
-                if all(x in aircraft for x in ("lat","lon","flight","altitude")):
-                    if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
-                    # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
-                        adsb.append(aircraft)
+                adsb.append(aircraft)
+                # if all(x in aircraft for x in ("lat","lon","flight","altitude")):
+                #     if aircraft['flight'] != "" and aircraft['flight'] != "????????" and aircraft['validposition'] == 1:
+                #     # if aircraft['flight'] != "" and aircraft['flight'] != "????????":
+                #         adsb.append(aircraft)
             
             res = requests.post(url = API_ENDPOINT, json = { 'auth' : API_KEY, 'data' : adsb }, headers=headers)
             logging.info(" status : "+str(res))
