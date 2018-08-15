@@ -138,4 +138,4 @@ while True:
         logging.warning(" an error occured")
     else:
         logging.info(" running without error")
-    sleep(0.5)
+    # sleep(0.5)
