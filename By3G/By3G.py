@@ -42,7 +42,7 @@ def check_internet(): # check internet connection
         return False
 
 def checklog():
-    if os.path.isfile('/home/pi/myapp.log') and os.path.getsize("/home/pi/myapp.log") >= 100000000:
+    if os.path.isfile('/home/pi/myapp.log') and os.path.getsize("/home/pi/myapp.log") >= 10000000:
         open("/home/pi/myapp.log", "w").close()
         logging.basicConfig(level=logging.DEBUG,
                             format='%(asctime)s %(levelname)s %(message)s',
