@@ -100,11 +100,11 @@ while True:
     pre_time = time()
     logging.info(os.path.getsize("/home/pi/myapp.log"))
     checklog()
-    if check_internet():
-        logging.info(" on")
-    else:
-        logging.info(" off")
-        when_lost()
+    # if check_internet():
+    #     logging.info(" on")
+    # else:
+    #     logging.info(" off")
+    #     when_lost()
         
     try:
         
@@ -138,4 +138,4 @@ while True:
         logging.warning(" an error occured")
     else:
         logging.info(" running without error")
-    # sleep(0.5)
+    sleep(1)
