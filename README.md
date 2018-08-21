@@ -20,11 +20,12 @@ sudo crontab -e
 add command to run script
 
 ```
-@reboot python3 file.py [IP] [PORT] [NODE_NUMBER] [API_KEY] [API_SECRET] &
-@reboot python3 /home/pi/temperature.py &
-59 23 * * * rm -f /home/pi/adsbUC20/history_*
+@reboot sudo python3 /home/pi/adsbUC20/By3G/By3G.py [IP] [PORT] [NO] [KEY] [SECRET] &
+@reboot python3 /home/pi/adsbUC20/temperature.py &
+59 23 * * * rm -f /home/pi/history_*
 0 0 * * * sudo reboot
-* * * * * python3 /home/pi/adsbUC20/adsbcheck.py
+*/5 * * * * python3 /home/pi/adsbUC20/adsbcheck.py
+* * * * * python3 /home/pi/adsbUC20/running.py
 ```
 add command to run modem 3G
 ```
