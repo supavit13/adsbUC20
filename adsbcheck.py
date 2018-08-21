@@ -37,6 +37,8 @@ try:
     urllib.request.urlopen("https://www.google.com/")
 except urllib.error.URLError:
     logging.warning("Network down")
+    logging.warning("reboot now")
+    os.popen('sudo reboot')
 else:
     logging.info("Up and running")
 
