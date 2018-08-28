@@ -105,7 +105,7 @@ while True:
         logging.info(" on")
     else:
         logging.info(" off")
-        when_lost()
+        # when_lost()
         
     try:
         
