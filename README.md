@@ -24,7 +24,7 @@ add command to run script
 @reboot python3 /home/pi/adsbUC20/temperature.py &
 59 23 * * * rm -f /home/pi/history_*
 0 0 * * * sudo reboot
-*/5 * * * * python3 /home/pi/adsbUC20/adsbcheck.py
+*/20 * * * * python3 /home/pi/adsbUC20/adsbcheck.py
 * * * * * python3 /home/pi/adsbUC20/running.py
 ```
 add command to run modem 3G
