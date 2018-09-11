@@ -22,8 +22,8 @@ add command to run script
 ```
 @reboot sudo python3 /home/pi/adsbUC20/By3G/By3G.py [IP] [PORT] [NO] [KEY] [SECRET] &
 @reboot python3 /home/pi/adsbUC20/temperature.py &
-59 23 * * * rm -f /home/pi/history_*
-0 0 * * * sudo reboot
+0 2 * * * rm -f /home/pi/history_*
+0 2 * * * sudo reboot
 */20 * * * * python3 /home/pi/adsbUC20/adsbcheck.py
 * * * * * python3 /home/pi/adsbUC20/running.py
 ```
