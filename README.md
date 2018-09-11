@@ -6,15 +6,17 @@
 - 3G Hat expansion for raspberry pi
 - raspberry pi 
 - Sakis3G
+- ppp
 - umtskeeper
 - watchdog
 - remot3.it
 ## installation
 - connect RTL-SDR usb and 3G hat on RPi
-- install python , dump1090 , Sakis3G , remot3 and umtskeeper
+- install python , dump1090 , ppp, Sakis3G , remot3 and umtskeeper
 - config umtskeeper , remot3 , dump1090 and reboot pi
 ## run on startup
 ```
+sudo install apt-get ppp
 sudo crontab -e
 ```
 add command to run script
