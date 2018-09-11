@@ -32,7 +32,7 @@ if err == -1:
 	logging.warning("not found script")
 	# os.popen("sudo pkill -f By3G.py")
 	# sleep(0.1)
-	os.popen("sudo python3 /home/pi/adsbUC20/By3G/By3G.py 164.115.43.87 8080 1 Vimt29H2p9 5b45b88c96f2234c3b3a8151 &")
+	os.popen("sudo python3 /home/pi/adsbUC20/By3G/By3G.py 164.115.43.87 8080 2 qLJrRHwsdK 5b95d8d5ba91a85e4619eb8c &")
 else:
 	logging.info("script running")
 #sudo python3 /home/pi/adsbUC20/By3G/By3G.py 164.115.43.87 80

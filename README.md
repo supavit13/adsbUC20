@@ -14,6 +14,7 @@
 - connect RTL-SDR usb and 3G hat on RPi
 - install python , dump1090 , ppp, Sakis3G , remot3 and umtskeeper
 - config umtskeeper , remot3 , dump1090 and reboot pi
+- [optional] install bmon, iftop
 ## run on startup
 ```
 sudo install apt-get ppp
