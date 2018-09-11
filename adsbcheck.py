@@ -25,16 +25,17 @@ else:
                      filemode='w')
     logging.debug('ADS-B Checker starting...')
     logging.info('Create file checking.log')
+
 try:
+    urllib.request.urlopen("https://www.google.com/")
     o = requests.get('http://127.0.0.1:8080/data.json')
     logging.debug('ADS-B Checker : Not error...')
     print(o.json())
-except:
+
+except requests.exceptions.ConnectionError:
     logging.debug('ADS-B Checker : dump1090.service error restart now')
     os.popen('sudo systemctl restart dump1090.service')
     os.popen('sudo systemctl start dump1090.service')
-try:
-    urllib.request.urlopen("https://www.google.com/")
 except urllib.error.URLError:
     logging.warning("Network down")
     logging.warning("reboot now")
